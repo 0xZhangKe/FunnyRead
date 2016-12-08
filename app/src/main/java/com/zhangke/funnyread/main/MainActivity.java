@@ -1,64 +1,79 @@
 package com.zhangke.funnyread.main;
 
-import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
+import android.graphics.Color;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.zhangke.funnyread.BaseActivity;
+import com.zhangke.funnyread.DouBan.DouBanFragment;
+import com.zhangke.funnyread.GuoKe.GuoKeFragment;
+import com.zhangke.funnyread.JianDan.JianDanFragment;
 import com.zhangke.funnyread.R;
+import com.zhangke.funnyread.TopNews.TopNewsFragment;
+import com.zhangke.funnyread.ZhiHu.ZhiHuFragment;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by ZhangKe on 2016/12/6.
  */
-public class MainActivity extends BaseActivity implements IMainView{
+public class MainActivity extends BaseActivity implements IMainView,View.OnClickListener{
+
+    private static final String ZHIHU_TAG="zhihu";
+    private static final String DOUBAN_TAG="douban";
+    private static final String GUOKE_TAG="guoke";
+    private static final String JIANDAN_TAG="jiandan";
+    private static final String TOPNEWS_TAG="topnews";
 
     private Toolbar toolbar;
-    private RecyclerView recycler_view;
+    private FrameLayout fl_content;
     private DrawerLayout drawer_layout;
+    private TextView drawer_tv_zhihu,drawer_tv_douban,
+            drawer_tv_guoke,drawer_tv_jiandan,drawer_tv_top_news,
+            drawer_tv_setting;
+
+    private ZhiHuFragment zhiHuFragment;
+    private DouBanFragment douBanFragment;
+    private GuoKeFragment guoKeFragment;
+    private JianDanFragment jianDanFragment;
+    private TopNewsFragment topNewsFragment;
+
     private ActionBarDrawerToggle mDrawerToggle;
+    private FragmentManager fragmentManager;
+    private IMainPresenter iMainPresenter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.drawer_test);
+    protected void setMyContentView() {
+        setContentView(R.layout.activity_main);
+    }
 
+    @Override
+    protected void initView() {
+        fl_content = (FrameLayout)findViewById(R.id.fl_content);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        recycler_view = (RecyclerView)findViewById(R.id.recycler_view);
         drawer_layout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        initDrawerView();
 
-
-        List<String> data = new ArrayList<>();
-        for(int i=0;i<50; i++){
-            data.add(""+i);
-        }
-        TestAdapter adapter = new TestAdapter(this,data);
-        recycler_view.setLayoutManager(new LinearLayoutManager(this));
-        recycler_view.setAdapter(adapter);
-
-        toolbar.setTitle("知乎日报");
+        toolbar.setTitle("知乎");
+        toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-
-        String[] lvs = {"List Item 01", "List Item 02", "List Item 03", "List Item 04"};
-        ListView lv_left_menu = (ListView)findViewById(R.id.lv_left_menu);
-        ArrayAdapter<String> lv_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,lvs);
-        lv_left_menu.setAdapter(lv_adapter);
+        iMainPresenter = new MainPresenterImpl(this);
+        zhiHuFragment = new ZhiHuFragment();
+        douBanFragment = new DouBanFragment();
+        guoKeFragment = new GuoKeFragment();
+        jianDanFragment = new JianDanFragment();
+        topNewsFragment = new TopNewsFragment();
 
         mDrawerToggle = new ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.open, R.string.close) {
             @Override
@@ -72,6 +87,141 @@ public class MainActivity extends BaseActivity implements IMainView{
         };
         mDrawerToggle.syncState();
         drawer_layout.setDrawerListener(mDrawerToggle);
+
+        fragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.add(R.id.fl_content,zhiHuFragment,ZHIHU_TAG);
+        ft.show(zhiHuFragment);
+        ft.commit();
+    }
+
+    private void initDrawerView(){
+        drawer_tv_zhihu = (TextView) findViewById(R.id.drawer_tv_zhihu);
+        drawer_tv_douban = (TextView) findViewById(R.id.drawer_tv_douban);
+        drawer_tv_guoke = (TextView) findViewById(R.id.drawer_tv_guoke);
+        drawer_tv_jiandan = (TextView) findViewById(R.id.drawer_tv_jiandan);
+        drawer_tv_top_news = (TextView) findViewById(R.id.drawer_tv_top_news);
+        drawer_tv_setting = (TextView) findViewById(R.id.drawer_tv_setting);
+
+        FragmentItemOnClick click = new FragmentItemOnClick();
+        drawer_tv_zhihu.setOnClickListener(click);
+        drawer_tv_douban.setOnClickListener(click);
+        drawer_tv_guoke.setOnClickListener(click);
+        drawer_tv_jiandan.setOnClickListener(click);
+        drawer_tv_top_news.setOnClickListener(click);
+        drawer_tv_setting.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.drawer_tv_setting:
+                iMainPresenter.settingClick();
+                break;
+        }
+    }
+
+    private class FragmentItemOnClick implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+            fragmentManager = getSupportFragmentManager();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            Fragment zhihu = fragmentManager.findFragmentByTag(ZHIHU_TAG);
+            Fragment douban = fragmentManager.findFragmentByTag(DOUBAN_TAG);
+            Fragment guoke = fragmentManager.findFragmentByTag(GUOKE_TAG);
+            Fragment jiandan = fragmentManager.findFragmentByTag(JIANDAN_TAG);
+            Fragment topnews = fragmentManager.findFragmentByTag(TOPNEWS_TAG);
+            if(null != zhihu) ft.hide(zhihu);
+            if(null != douban) ft.hide(douban);
+            if(null != guoke) ft.hide(guoke);
+            if(null != jiandan) ft.hide(jiandan);
+            if(null != topnews) ft.hide(topnews);
+            switch(v.getId()){
+                case R.id.drawer_tv_zhihu:
+                    iMainPresenter.zhiHuClick();
+                    if (zhihu == null) {
+                        zhihu = new ZhiHuFragment();
+                        ft.add(R.id.fl_content, zhihu, ZHIHU_TAG);
+                    } else {
+                        ft.show(zhihu);
+                    }
+                    break;
+                case R.id.drawer_tv_douban:
+                    iMainPresenter.douBanClick();
+                    if (douban == null) {
+                        douban = new DouBanFragment();
+                        ft.add(R.id.fl_content, douban, DOUBAN_TAG);
+                    } else {
+                        ft.show(douban);
+                    }
+                    break;
+                case R.id.drawer_tv_guoke:
+                    iMainPresenter.guoKeClick();
+                    if (guoke == null) {
+                        guoke = new GuoKeFragment();
+                        ft.add(R.id.fl_content, guoke, GUOKE_TAG);
+                    } else {
+                        ft.show(guoke);
+                    }
+                    break;
+                case R.id.drawer_tv_jiandan:
+                    iMainPresenter.jianDanClick();
+                    if (jiandan == null) {
+                        jiandan = new JianDanFragment();
+                        ft.add(R.id.fl_content, jiandan, JIANDAN_TAG);
+                    } else {
+                        ft.show(jiandan);
+                    }
+                    break;
+                case R.id.drawer_tv_top_news:
+                    iMainPresenter.topNewsClick();
+                    if (topnews == null) {
+                        topnews = new TopNewsFragment();
+                        ft.add(R.id.fl_content, topnews, TOPNEWS_TAG);
+                    } else {
+                        ft.show(topnews);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            ft.commit();
+        }
+    }
+
+    @Override
+    public void onZhiHuClick() {
+        toolbar.setTitle("知乎");
+        drawer_layout.closeDrawers();
+    }
+
+    @Override
+    public void onDouBanClick() {
+        toolbar.setTitle("豆瓣");
+        drawer_layout.closeDrawers();
+    }
+
+    @Override
+    public void onGuoKeClick() {
+        toolbar.setTitle("果壳");
+        drawer_layout.closeDrawers();
+    }
+
+    @Override
+    public void onJianDanClick() {
+        toolbar.setTitle("煎蛋");
+        drawer_layout.closeDrawers();
+    }
+
+    @Override
+    public void onTopNewsClick() {
+        toolbar.setTitle("头条");
+        drawer_layout.closeDrawers();
+    }
+
+    @Override
+    public void onSettingClick() {
+        drawer_layout.closeDrawers();
     }
 
     /**

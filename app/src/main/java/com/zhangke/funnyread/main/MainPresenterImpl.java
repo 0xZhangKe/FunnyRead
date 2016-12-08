@@ -11,4 +11,34 @@ public class MainPresenterImpl implements IMainPresenter{
     public MainPresenterImpl(IMainView iMainView) {
         this.iMainView = iMainView;
     }
+
+    @Override
+    public void zhiHuClick() {
+        iMainView.onZhiHuClick();
+    }
+
+    @Override
+    public void douBanClick() {
+        iMainView.onDouBanClick();
+    }
+
+    @Override
+    public void guoKeClick() {
+        iMainView.onGuoKeClick();
+    }
+
+    @Override
+    public void jianDanClick() {
+        iMainView.onJianDanClick();
+    }
+
+    @Override
+    public void topNewsClick() {
+        iMainView.onTopNewsClick();
+    }
+
+    @Override
+    public void settingClick() {
+        iMainView.onSettingClick();
+    }
 }

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_drawer_bg_color">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp"
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/drawer_tv_zhihu"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="50dp"
+            android:paddingLeft="50dp"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:text="知乎"/>
+
+        <TextView
+            android:id="@+id/drawer_tv_douban"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="50dp"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:text="豆瓣"/>
+        <TextView
+            android:id="@+id/drawer_tv_guoke"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="50dp"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:text="果壳"/>
+        <TextView
+            android:id="@+id/drawer_tv_jiandan"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="50dp"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:text="煎蛋"/>
+        <TextView
+            android:id="@+id/drawer_tv_top_news"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="50dp"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:text="头条"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="50dp"
+        android:background="@color/gray_line_color"/>
+    <TextView
+        android:id="@+id/drawer_tv_setting"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="50dp"
+        android:layout_gravity="bottom"
+        android:textSize="16sp"
+        android:gravity="center_vertical"
+        android:text="设置"/>
+
+</FrameLayout>
