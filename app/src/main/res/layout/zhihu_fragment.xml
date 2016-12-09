@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabIndicatorColor="#FFFFFFFF"
-        app:tabSelectedTextColor="#FFFFFFFF"
-        app:tabTextColor="#AAFFFFFF"
-        app:tabGravity="center"
-    android:background="?attr/colorPrimary"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="match_parent"/>
 
-</LinearLayout>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:tabIndicatorColor="#FFFFFFFF"
+        app:tabSelectedTextColor="#FFFFFFFF"
+        app:tabTextColor="#AAFFFFFF"
+        app:tabGravity="center"
+        android:background="?attr/colorPrimary"/>
+
+
+</FrameLayout>

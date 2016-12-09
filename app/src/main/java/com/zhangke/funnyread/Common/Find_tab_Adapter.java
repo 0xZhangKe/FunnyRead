@@ -1,4 +1,4 @@
-package com.zhangke.funnyread.Common;
+package com.zhangke.funnyread.common;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
