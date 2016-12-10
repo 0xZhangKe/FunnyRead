@@ -8,22 +8,17 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 
-import com.zhangke.funnyread.BaseFragment;
+import com.zhangke.funnyread.ZhiHu.view.ZhiHuColumnFragment;
+import com.zhangke.funnyread.ZhiHu.view.ZhiHuDiaryFragment;
+import com.zhangke.funnyread.common.BaseFragment;
 import com.zhangke.funnyread.common.Find_tab_Adapter;
 import com.zhangke.funnyread.R;
 import com.zhangke.funnyread.common.IRecyclerViewScrollListener;
 import com.zhangke.funnyread.utils.DisplayUtil;
-import com.zhangke.funnyread.widget.WrapperHeightAnimView;
 
 import java.util.ArrayList;
 import java.util.List;
