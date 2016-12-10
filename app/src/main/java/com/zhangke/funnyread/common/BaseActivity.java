@@ -1,4 +1,4 @@
-package com.zhangke.funnyread;
+package com.zhangke.funnyread.common;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

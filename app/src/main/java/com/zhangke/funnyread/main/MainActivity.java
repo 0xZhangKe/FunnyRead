@@ -1,7 +1,6 @@
 package com.zhangke.funnyread.main;
 
 import android.graphics.Color;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,7 +14,7 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.zhangke.funnyread.BaseActivity;
+import com.zhangke.funnyread.common.BaseActivity;
 import com.zhangke.funnyread.DouBan.DouBanFragment;
 import com.zhangke.funnyread.GuoKe.GuoKeFragment;
 import com.zhangke.funnyread.JianDan.JianDanFragment;

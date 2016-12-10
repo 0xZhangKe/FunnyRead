@@ -7,7 +7,7 @@ import com.zhangke.funnyread.utils.DisplayUtil;
  * RecyclerView的滑动监听器
  */
 public interface IRecyclerViewScrollListener {
-    public static final int TouchSlop = DisplayUtil.dip2px(MyApplication.getContextObject(),10);
+    int TouchSlop = DisplayUtil.dip2px(MyApplication.getContextObject(),8);
     void onScrollUp();
     void onScrollDown();
 }
