@@ -5,9 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.zhangke.funnyread.R;
+import com.zhangke.funnyread.ZhiHu.ZhiHuEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,39 +17,30 @@ import java.util.List;
 /**
  * Created by ZhangKe at 2016/12/9
  */
-public class TestRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class TestRecyclerAdapter extends BaseRecyclerRefreshAdapter<ZhiHuEntity>{
 
-    public static enum ITEM_TYPE {
-        ITEM_TYPE_HEAD, ITEM_TYPE_COMMON
-    }
-
-    private Context context;
-    private List<String> list_data;
-
-    public TestRecyclerAdapter(Context context) {
-        this.context = context;
-        list_data = new ArrayList<>();
-        list_data.add("0");
-        for(int i=0;i<20;i++){
-            list_data.add(""+i);
-        }
+    public TestRecyclerAdapter(Context context, List<ZhiHuEntity> list_data) {
+        super(context, list_data);
+        ZhiHuEntity entity = new ZhiHuEntity();
+//        list_data.add(0,entity);
+//        list_data.add(entity);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType == ITEM_TYPE.ITEM_TYPE_HEAD.ordinal()){
-            return new HeadViewHolder(LayoutInflater.from(context).
-                    inflate(R.layout.recycler_head_view,parent,false));
+        if(ITEM_TYPE_MAIN == viewType){
+            return new CommonViewHolder(LayoutInflater.from(context).inflate(R.layout.test_recycler_adapter,parent,false));
         }else{
-            return new CommonViewHolder(LayoutInflater.from(context).
-                    inflate(R.layout.test_recycler_adapter,parent,false));
+            return super.onCreateViewHolder(parent, viewType);
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof CommonViewHolder){
-            ((CommonViewHolder)holder).tv.setText(list_data.get(position));
+            ((CommonViewHolder)holder).tv.setText(list_data.get(position).getContent());
+        }else{
+            super.onBindViewHolder(holder, position);
         }
     }
 
@@ -58,7 +51,11 @@ public class TestRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        return position == 0 ? ITEM_TYPE.ITEM_TYPE_HEAD.ordinal() : ITEM_TYPE.ITEM_TYPE_COMMON.ordinal();
+        if(0 != position && (list_data.size()-1) != position) {
+            return ITEM_TYPE_MAIN;
+        }else{
+            return super.getItemViewType(position);
+        }
     }
 
     public static class CommonViewHolder extends RecyclerView.ViewHolder{
@@ -66,12 +63,6 @@ public class TestRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public CommonViewHolder(View itemView) {
             super(itemView);
             tv = (TextView)itemView.findViewById(R.id.tv);
-        }
-    }
-
-    public static class HeadViewHolder extends RecyclerView.ViewHolder{
-        public HeadViewHolder(View itemView) {
-            super(itemView);
         }
     }
 }

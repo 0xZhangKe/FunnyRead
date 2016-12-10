@@ -22,6 +22,7 @@
             android:layout_marginTop="50dp"
             android:paddingLeft="50dp"
             android:textSize="16sp"
+            android:clickable="true"
             android:gravity="center_vertical"
             android:text="知乎"/>
 
@@ -31,6 +32,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="20dp"
             android:paddingLeft="50dp"
+            android:clickable="true"
             android:textSize="16sp"
             android:gravity="center_vertical"
             android:text="豆瓣"/>
@@ -39,6 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="20dp"
+            android:clickable="true"
             android:paddingLeft="50dp"
             android:textSize="16sp"
             android:gravity="center_vertical"
@@ -48,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="20dp"
+            android:clickable="true"
             android:paddingLeft="50dp"
             android:textSize="16sp"
             android:gravity="center_vertical"
@@ -57,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="20dp"
+            android:clickable="true"
             android:paddingLeft="50dp"
             android:textSize="16sp"
             android:gravity="center_vertical"
@@ -77,6 +82,7 @@
         android:layout_height="50dp"
         android:paddingLeft="50dp"
         android:layout_gravity="bottom"
+        android:clickable="true"
         android:textSize="16sp"
         android:gravity="center_vertical"
         android:text="设置"/>
