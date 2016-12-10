@@ -11,16 +11,16 @@ import android.widget.TextView;
 import com.zhangke.funnyread.R;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by ZhangKe at 2016/12/10
  */
-public class BaseRecyclerRefreshAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class BaseRecyclerRefreshAdapter<T extends BaseRecyclerRefreshEntity> extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     protected static final int ITEM_TYPE_HEAD=0;
-    protected static final int ITEM_TYPE_FOOTER=1;
-    protected static final int ITEM_TYPE_MAIN=2;
+    protected static final int ITEM_TYPE_LOADING_FOOTER=1;
+    protected static final int ITEM_TYPE_ERROR=2;
+    protected static final int ITEM_TYPE_MAIN=3;
 
     protected Context context;
     protected List<T> list_data;
@@ -28,8 +28,6 @@ public class BaseRecyclerRefreshAdapter<T> extends RecyclerView.Adapter<Recycler
     public BaseRecyclerRefreshAdapter(Context context, List<T> list_data) {
         this.context = context;
         this.list_data = list_data;
-        list_data.add(0,null);
-        list_data.add(null);
     }
 
     @Override
@@ -38,9 +36,13 @@ public class BaseRecyclerRefreshAdapter<T> extends RecyclerView.Adapter<Recycler
             return new HeadViewHolder(LayoutInflater.from(context).
                     inflate(R.layout.recycler_head_view,parent,false));
         }
-        if(viewType == ITEM_TYPE_FOOTER){
+        if(viewType == ITEM_TYPE_LOADING_FOOTER){
             return new FooterViewHolder(LayoutInflater.from(context).
                     inflate(R.layout.recycler_footer,parent,false));
+        }
+        if(viewType == ITEM_TYPE_ERROR){
+            return new ErrorViewHolder(LayoutInflater.from(context).
+                    inflate(R.layout.recycler_error_item,parent,false));
         }
         return null;
     }
@@ -57,7 +59,7 @@ public class BaseRecyclerRefreshAdapter<T> extends RecyclerView.Adapter<Recycler
     @Override
     public int getItemViewType(int position) {
         if(0 == position) return ITEM_TYPE_HEAD;
-        if((list_data.size()-1) == position) return ITEM_TYPE_FOOTER;
+        if((list_data.get(position).isLoadingItem())) return ITEM_TYPE_LOADING_FOOTER;
         return ITEM_TYPE_MAIN;
     }
 
@@ -72,6 +74,12 @@ public class BaseRecyclerRefreshAdapter<T> extends RecyclerView.Adapter<Recycler
         public FooterViewHolder(View itemView) {
             super(itemView);
             progress_bar = (ProgressBar)itemView.findViewById(R.id.progress_bar);
+        }
+    }
+
+    public static class ErrorViewHolder extends RecyclerView.ViewHolder{
+        public ErrorViewHolder(View itemView) {
+            super(itemView);
         }
     }
 }
