@@ -7,9 +7,6 @@ public class BaseRecyclerRefreshEntity {
     private boolean isErrorItem = false;
     private boolean isLoadingItem = false;
 
-    public BaseRecyclerRefreshEntity() {
-    }
-
     public boolean isErrorItem() {
         return isErrorItem;
     }

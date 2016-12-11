@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.zhangke.funnyread.R;
 
@@ -15,7 +14,8 @@ import java.util.List;
 /**
  * Created by ZhangKe at 2016/12/10
  */
-public class BaseRecyclerRefreshAdapter<T extends BaseRecyclerRefreshEntity> extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public abstract class BaseRecyclerRefreshAdapter<T extends BaseRecyclerRefreshEntity>
+        extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     protected static final int ITEM_TYPE_HEAD=0;
     protected static final int ITEM_TYPE_LOADING_FOOTER=1;
@@ -60,6 +60,7 @@ public class BaseRecyclerRefreshAdapter<T extends BaseRecyclerRefreshEntity> ext
     public int getItemViewType(int position) {
         if(0 == position) return ITEM_TYPE_HEAD;
         if((list_data.get(position).isLoadingItem())) return ITEM_TYPE_LOADING_FOOTER;
+        if((list_data.get(position).isErrorItem())) return ITEM_TYPE_ERROR;
         return ITEM_TYPE_MAIN;
     }
 
