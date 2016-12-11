@@ -1,12 +1,16 @@
 package com.zhangke.funnyread.ZhiHu.presenter;
 
+import android.content.Context;
+
 import com.zhangke.funnyread.ZhiHu.entity.ZhiHuDiaryEntity;
-import com.zhangke.funnyread.ZhiHu.model.IZhiHu;
-import com.zhangke.funnyread.ZhiHu.model.ZhiHu;
+import com.zhangke.funnyread.ZhiHu.model.IZhiHuDiary;
+import com.zhangke.funnyread.ZhiHu.model.ZhiHuDiary;
 import com.zhangke.funnyread.ZhiHu.view.IZhiHuDiaryView;
 import com.zhangke.funnyread.common.OnHttpCallbaclListener;
+import com.zhangke.funnyread.utils.DateUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -14,94 +18,105 @@ import java.util.List;
  */
 public class ZhiHuDiaryPresenterImpl implements IZhiHuDiaryPresenter {
 
-    private List<ZhiHuDiaryEntity> list_data = new ArrayList<>();
+    private List<ZhiHuDiaryEntity.Stories> list_data = new ArrayList<>();
     private IZhiHuDiaryView iZhiHuDiaryView;
-    private IZhiHu iZhiHu;
+    private IZhiHuDiary iZhiHuDiary;
+    private Context context;
 
-    private int pageNumber = 1;
+    private String currentDate;//程序已经加载到的日期
 
-    public ZhiHuDiaryPresenterImpl(IZhiHuDiaryView iZhiHuDiaryView) {
+    public ZhiHuDiaryPresenterImpl(Context context , IZhiHuDiaryView iZhiHuDiaryView) {
+        this.context = context;
         this.iZhiHuDiaryView = iZhiHuDiaryView;
-        iZhiHu = new ZhiHu();
-        list_data.add(null);
-        addListHead();
+        iZhiHuDiary = new ZhiHuDiary(context);
+        currentDate = DateUtils.getNextDate(DateUtils.getNowDate());
         onRefresh();
     }
 
     @Override
     public void onRefresh() {
-        iZhiHuDiaryView.setRefresh(true);
-        pageNumber = 1;
-        if(list_data.size() > 0){
-            list_data.clear();
+        synchronized (list_data) {
+            iZhiHuDiaryView.setRefresh(true);
+            currentDate = DateUtils.getNextDate(DateUtils.getNowDate());
+            if (list_data.size() > 0) {
+                list_data.clear();
+            }
+            addListHead();//TODO notifyAdapter
+            iZhiHuDiary.getZhiHuDiaryLatest(new OnHttpCallbaclListener<ZhiHuDiaryEntity.Stories>() {
+                @Override
+                public void onSuccess(List<ZhiHuDiaryEntity.Stories> data) {
+                    list_data.addAll(data);
+                    iZhiHuDiaryView.setRefresh(false);
+                    iZhiHuDiaryView.notifyAdapterDataChanged();
+                }
+
+                @Override
+                public void onError(String error) {
+                    iZhiHuDiaryView.setRefresh(false);
+                    iZhiHuDiaryView.showSnakebar(error);
+                    iZhiHuDiaryView.notifyAdapterDataChanged();
+                }
+
+                @Override
+                public void onNoData() {
+                    iZhiHuDiaryView.setRefresh(false);
+                    iZhiHuDiaryView.showSnakebar("暂无数据");
+                    iZhiHuDiaryView.notifyAdapterDataChanged();
+                }
+            });
         }
-        addListHead();
-        iZhiHu.getZhiHuDiary(pageNumber, 0, new OnHttpCallbaclListener<ZhiHuDiaryEntity>() {
-            @Override
-            public void onSuccess(List<ZhiHuDiaryEntity> data) {
-                list_data.addAll(data);
-                iZhiHuDiaryView.setRefresh(false);
-                iZhiHuDiaryView.notifyAdapterDataChanged();
-            }
-
-            @Override
-            public void onError(String error) {
-                iZhiHuDiaryView.setRefresh(false);
-                iZhiHuDiaryView.onShowToast(error);
-            }
-
-            @Override
-            public void onNoData() {
-                iZhiHuDiaryView.setRefresh(false);
-                iZhiHuDiaryView.onShowToast("暂无数据");
-            }
-        });
     }
 
     @Override
     public void onScrollToBottom() {
-        ZhiHuDiaryEntity entity = new ZhiHuDiaryEntity();
-        entity.setLoadingItem(true);
-        entity.setErrorItem(false);
-        list_data.add(entity);
-        iZhiHuDiaryView.notifyAdapterDataChanged();
-        iZhiHu.getZhiHuDiary(pageNumber + 1, 0, new OnHttpCallbaclListener<ZhiHuDiaryEntity>() {
-            @Override
-            public void onSuccess(List<ZhiHuDiaryEntity> data) {
-                pageNumber++;
-                clearErrorAndFooterItem();
-                list_data.addAll(data);
-                iZhiHuDiaryView.closeLoadingState();
-                iZhiHuDiaryView.notifyAdapterDataChanged();
-            }
+        synchronized (list_data) {
+            clearErrorAndFooterItem();
+            ZhiHuDiaryEntity.Stories entity = new ZhiHuDiaryEntity.Stories();
+            entity.setLoadingItem(true);
+            entity.setErrorItem(false);
+            list_data.add(entity);
+            iZhiHuDiaryView.notifyAdapterDataChanged();
+            iZhiHuDiary.getZhiHuDiaryBefore(DateUtils.getBeforeDate(currentDate), new OnHttpCallbaclListener<ZhiHuDiaryEntity.Stories>() {
+                @Override
+                public void onSuccess(List<ZhiHuDiaryEntity.Stories> data) {
+                    currentDate = DateUtils.getBeforeDate(currentDate);
+                    clearErrorAndFooterItem();
+                    list_data.addAll(data);
+                    iZhiHuDiaryView.closeLoadingState();
+                    iZhiHuDiaryView.notifyAdapterDataChanged();
+                }
 
-            @Override
-            public void onError(String error) {
-                clearErrorAndFooterItem();
-                ZhiHuDiaryEntity entity = new ZhiHuDiaryEntity();
-                entity.setErrorItem(true);
-                list_data.add(entity);
-                iZhiHuDiaryView.closeLoadingState();
-                iZhiHuDiaryView.notifyAdapterDataChanged();
-            }
+                @Override
+                public void onError(String error) {
+                    clearErrorAndFooterItem();
+                    ZhiHuDiaryEntity.Stories entity = new ZhiHuDiaryEntity.Stories();
+                    entity.setErrorItem(true);
+                    list_data.add(entity);
+                    iZhiHuDiaryView.closeLoadingState();
+                    iZhiHuDiaryView.notifyAdapterDataChanged();
+                }
 
-            @Override
-            public void onNoData() {
-                clearErrorAndFooterItem();
-                iZhiHuDiaryView.closeLoadingState();
-                iZhiHuDiaryView.notifyAdapterDataChanged();
-            }
-        });
+                @Override
+                public void onNoData() {
+                    clearErrorAndFooterItem();
+                    iZhiHuDiaryView.closeLoadingState();
+                    iZhiHuDiaryView.notifyAdapterDataChanged();
+                }
+            });
+        }
     }
 
     /**
      * 清楚RecyclerView中的错误或者Foot而视图
      */
     private void clearErrorAndFooterItem(){
-        if(list_data.size() > 0){
-            for(ZhiHuDiaryEntity entity : list_data){
-                if(entity.isLoadingItem() || entity.isErrorItem()){
-                    list_data.remove(entity);
+        synchronized (list_data) {
+            if (list_data.size() > 0) {
+                for(Iterator<ZhiHuDiaryEntity.Stories> it = list_data.iterator(); it.hasNext(); ){
+                    ZhiHuDiaryEntity.Stories entity = it.next();
+                    if (entity.isLoadingItem() || entity.isErrorItem()) {
+                        it.remove();
+                    }
                 }
             }
         }
@@ -111,11 +126,14 @@ public class ZhiHuDiaryPresenterImpl implements IZhiHuDiaryPresenter {
      * 给list_data添加一个head，下标为0的数据会被设置为head。
      */
     private void addListHead(){
-        list_data.add(0,null);
+        ZhiHuDiaryEntity.Stories entity = new ZhiHuDiaryEntity.Stories();
+        entity.setErrorItem(false);
+        entity.setLoadingItem(false);
+        list_data.add(entity);
     }
 
     @Override
-    public List<ZhiHuDiaryEntity> getRecyclerData() {
+    public List<ZhiHuDiaryEntity.Stories> getRecyclerData() {
         return list_data;
     }
 }

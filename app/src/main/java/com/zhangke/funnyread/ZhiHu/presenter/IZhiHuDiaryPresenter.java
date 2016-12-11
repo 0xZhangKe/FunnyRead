@@ -10,5 +10,5 @@ import java.util.List;
 public interface IZhiHuDiaryPresenter {
     void onRefresh();
     void onScrollToBottom();
-    List<ZhiHuDiaryEntity> getRecyclerData();
+    List<ZhiHuDiaryEntity.Stories> getRecyclerData();
 }
