@@ -8,4 +8,5 @@ public interface IZhiHuDiaryView {
     void closeLoadingState();
     void notifyAdapterDataChanged();
     void onShowToast(String msg);
+    void showSnakebar(String msg);
 }
