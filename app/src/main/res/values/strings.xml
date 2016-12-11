@@ -16,4 +16,6 @@
     </string>
     <string name="open">open</string>
     <string name="close">close</string>
+    <string name="internet_error">网络有问题...</string>
+    <string name="json_error">数据解析错误...</string>
 </resources>
