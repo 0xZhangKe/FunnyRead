@@ -28,7 +28,9 @@ public class PowerRecyclerView extends SwipeRefreshLayout {
     public PowerRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         recycler_view = new RecyclerView(context);
-        recycler_view.setLayoutManager(new LinearLayoutManager(context));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        recycler_view.setLayoutManager(linearLayoutManager);
+//        recycler_view.addItemDecoration(new DividerItemDecoration(context, linearLayoutManager.getOrientation()));
         recycler_view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         touchSlop= ViewConfiguration.get(context).getScaledTouchSlop();
         WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
