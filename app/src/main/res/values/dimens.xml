@@ -5,4 +5,5 @@
 
     <dimen name="pull_to_refresh_view_height">60dp</dimen>
     <dimen name="zhihu_diary_item_height">80dp</dimen>
+    <dimen name="appbar_default_height">240dp</dimen>
 </resources>

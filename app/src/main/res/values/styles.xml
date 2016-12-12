@@ -35,4 +35,22 @@
     <style name="ActionButton.Overflow.white" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
         <item name="android:src">@mipmap/menu_more_overflow</item>
     </style>
+
+    <!-- AppBar样式 -->
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!-- CollapsingToolbarLayout Title字体 -->
+    <style name="CollapsingToolbarExpandedTextAppearance">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="CollapsingToolbarCollapsedTextAppearance">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="ToolbarFullScreen" parent="ThemeOverlay.AppCompat.Light">
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+    </style>
 </resources>
