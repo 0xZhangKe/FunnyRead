@@ -23,6 +23,8 @@ public class ZhiHuDiaryAdapter extends BaseRecyclerRefreshAdapter<ZhiHuDiaryEnti
 
     private static final int ITEM_TYPE_DATE=4;
 
+    private OnItemClickListener onItemClickListener;
+
     public ZhiHuDiaryAdapter(Context context, List<ZhiHuDiaryEntity.Stories> list_data) {
         super(context, list_data);
     }
@@ -62,17 +64,33 @@ public class ZhiHuDiaryAdapter extends BaseRecyclerRefreshAdapter<ZhiHuDiaryEnti
         return super.getItemViewType(position);
     }
 
-    public static class MainViewHolder extends RecyclerView.ViewHolder{
+    public class MainViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView tv_title;
         private ImageView img;
         public MainViewHolder(View itemView) {
             super(itemView);
             tv_title = (TextView)itemView.findViewById(R.id.tv_title);
             img = (ImageView)itemView.findViewById(R.id.img);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(null != ZhiHuDiaryAdapter.this.onItemClickListener){
+                ZhiHuDiaryAdapter.this.onItemClickListener.onClick(list_data.get(getAdapterPosition()));
+            }
         }
     }
 
-    public static class DateViewHolder extends RecyclerView.ViewHolder{
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener{
+        void onClick(ZhiHuDiaryEntity.Stories entity);
+    }
+
+    public class DateViewHolder extends RecyclerView.ViewHolder{
         private TextView tv_date;
         public DateViewHolder(View itemView) {
             super(itemView);
