@@ -2,6 +2,7 @@ package com.zhangke.funnyread.ZhiHu.entity;
 
 import com.zhangke.funnyread.common.BaseRecyclerRefreshEntity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -81,7 +82,9 @@ public class ZhiHuDiaryEntity{
         }
     }
 
-    public static class Stories  extends BaseRecyclerRefreshEntity{
+    public static class Stories extends BaseRecyclerRefreshEntity implements Serializable{
+        private static final long serialVersionUID = 1L;
+
         private List<String> images ;
 
         private int type;
