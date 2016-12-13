@@ -1,6 +1,8 @@
 package com.zhangke.funnyread.ZhiHu.model;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
@@ -9,15 +11,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.zhangke.funnyread.R;
-import com.zhangke.funnyread.ZhiHu.entity.ZhiHuColumnEntity;
+import com.zhangke.funnyread.ZhiHu.entity.ZhiHuDiaryDetailEntity;
 import com.zhangke.funnyread.ZhiHu.entity.ZhiHuDiaryEntity;
 import com.zhangke.funnyread.common.MyApplication;
-import com.zhangke.funnyread.common.OnHttpCallbaclListener;
+import com.zhangke.funnyread.common.OnHttpDataCallbaclListener;
+import com.zhangke.funnyread.common.OnHttpListCallbaclListener;
 import com.zhangke.funnyread.utils.Api;
 import com.zhangke.funnyread.utils.DateUtils;
 import com.zhangke.funnyread.utils.HttpUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,20 +27,24 @@ import java.util.List;
  */
 public class ZhiHuDiary implements IZhiHuDiary {
 
-    private Context context;
     private RequestQueue mQueue;
     private String json_error;
     private String internet_error;
 
     public ZhiHuDiary(Context context) {
-        this.context = context;
         json_error = context.getString(R.string.json_error);
         internet_error = context.getString(R.string.internet_error);
-        mQueue = Volley.newRequestQueue(MyApplication.getContextObject());
+        mQueue = Volley.newRequestQueue(context);
+    }
+
+    public ZhiHuDiary(Activity activity) {
+        json_error = activity.getString(R.string.json_error);
+        internet_error = activity.getString(R.string.internet_error);
+        mQueue = Volley.newRequestQueue(activity);
     }
 
     @Override
-    public void getZhiHuDiaryLatest(final OnHttpCallbaclListener<ZhiHuDiaryEntity.Stories> callback) {
+    public void getZhiHuDiaryLatest(final OnHttpListCallbaclListener<ZhiHuDiaryEntity.Stories> callback) {
         StringRequest stringRequest = new StringRequest(Api.ZHIHU_LATEST,
                 new Response.Listener<String>() {
                     @Override
@@ -66,7 +72,7 @@ public class ZhiHuDiary implements IZhiHuDiary {
     }
 
     @Override
-    public void getZhiHuDiaryBefore(String date, final OnHttpCallbaclListener<ZhiHuDiaryEntity.Stories> callback) {
+    public void getZhiHuDiaryBefore(String date, final OnHttpListCallbaclListener<ZhiHuDiaryEntity.Stories> callback) {
         StringRequest stringRequest = new StringRequest(Api.ZHIHU_HISTORY+date,
                 new Response.Listener<String>() {
                     @Override
@@ -82,6 +88,35 @@ public class ZhiHuDiary implements IZhiHuDiary {
                                 List<ZhiHuDiaryEntity.Stories> list_data = zhiHuDiaryEntity.getStories();
                                 list_data.add(0,entity);
                                 callback.onSuccess(list_data);
+                            }else {
+                                callback.onNoData();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("TAG", error.getMessage(), error);
+                        callback.onError(internet_error);
+                    }
+                });
+        mQueue.add(stringRequest);
+    }
+
+    @Override
+    public void getZhiHuDiaryDetail(String id, final OnHttpDataCallbaclListener<ZhiHuDiaryDetailEntity> callback) {
+
+        StringRequest stringRequest = new StringRequest(Api.ZHIHU_NEWS+id,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(final String response) {
+                        if(null == response){
+                            callback.onNoData();
+                        }else{
+                            ZhiHuDiaryDetailEntity zhiHuDiaryDetailEntity = HttpUtils.parseJsonWithGson(response, ZhiHuDiaryDetailEntity.class);
+                            if(null != zhiHuDiaryDetailEntity){
+                                callback.onSuccess(zhiHuDiaryDetailEntity);
                             }else {
                                 callback.onNoData();
                             }
