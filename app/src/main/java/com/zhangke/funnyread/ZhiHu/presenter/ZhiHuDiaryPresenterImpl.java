@@ -6,7 +6,7 @@ import com.zhangke.funnyread.ZhiHu.entity.ZhiHuDiaryEntity;
 import com.zhangke.funnyread.ZhiHu.model.IZhiHuDiary;
 import com.zhangke.funnyread.ZhiHu.model.ZhiHuDiary;
 import com.zhangke.funnyread.ZhiHu.view.IZhiHuDiaryView;
-import com.zhangke.funnyread.common.OnHttpCallbaclListener;
+import com.zhangke.funnyread.common.OnHttpListCallbaclListener;
 import com.zhangke.funnyread.utils.DateUtils;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class ZhiHuDiaryPresenterImpl implements IZhiHuDiaryPresenter {
                 list_data.clear();
             }
             addListHead();//TODO notifyAdapter
-            iZhiHuDiary.getZhiHuDiaryLatest(new OnHttpCallbaclListener<ZhiHuDiaryEntity.Stories>() {
+            iZhiHuDiary.getZhiHuDiaryLatest(new OnHttpListCallbaclListener<ZhiHuDiaryEntity.Stories>() {
                 @Override
                 public void onSuccess(List<ZhiHuDiaryEntity.Stories> data) {
                     list_data.addAll(data);
@@ -76,7 +76,8 @@ public class ZhiHuDiaryPresenterImpl implements IZhiHuDiaryPresenter {
             entity.setErrorItem(false);
             list_data.add(entity);
             iZhiHuDiaryView.notifyAdapterDataChanged();
-            iZhiHuDiary.getZhiHuDiaryBefore(DateUtils.getBeforeDate(currentDate), new OnHttpCallbaclListener<ZhiHuDiaryEntity.Stories>() {
+            iZhiHuDiaryView.recyclerViewScrollToPosition(list_data.size());
+            iZhiHuDiary.getZhiHuDiaryBefore(DateUtils.getBeforeDate(currentDate), new OnHttpListCallbaclListener<ZhiHuDiaryEntity.Stories>() {
                 @Override
                 public void onSuccess(List<ZhiHuDiaryEntity.Stories> data) {
                     currentDate = DateUtils.getBeforeDate(currentDate);

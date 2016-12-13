@@ -9,4 +9,5 @@ public interface IZhiHuDiaryView {
     void notifyAdapterDataChanged();
     void onShowToast(String msg);
     void showSnakebar(String msg);
+    void recyclerViewScrollToPosition(int position);
 }
