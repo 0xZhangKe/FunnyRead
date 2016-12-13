@@ -3,10 +3,10 @@ package com.zhangke.funnyread.common;
 import java.util.List;
 
 /**
- * Created by ZhangKe at 2016/12/10
+ * Created by ZhangKe at 2016/12/13
  */
-public interface OnHttpCallbaclListener<T> {
-    void onSuccess(List<T> data);
+public interface OnHttpDataCallbaclListener<T> {
+    void onSuccess(T data);
     void onError(String error);
     void onNoData();
 }
