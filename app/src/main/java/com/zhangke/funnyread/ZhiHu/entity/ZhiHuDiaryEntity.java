@@ -94,9 +94,18 @@ public class ZhiHuDiaryEntity{
         private String ga_prefix;
 
         private String title;
+        private String date;
 
         private String currentDate;
         private boolean isDateView=false;
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
 
         public void setType(int type){
             this.type = type;

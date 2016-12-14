@@ -16,6 +16,7 @@ import com.zhangke.funnyread.ZhiHu.entity.ZhiHuDiaryEntity;
 import com.zhangke.funnyread.common.MyApplication;
 import com.zhangke.funnyread.common.OnHttpDataCallbaclListener;
 import com.zhangke.funnyread.common.OnHttpListCallbaclListener;
+import com.zhangke.funnyread.db.ZhiHuDBHelper;
 import com.zhangke.funnyread.utils.Api;
 import com.zhangke.funnyread.utils.DateUtils;
 import com.zhangke.funnyread.utils.HttpUtils;
@@ -30,8 +31,10 @@ public class ZhiHuDiary implements IZhiHuDiary {
     private RequestQueue mQueue;
     private String json_error;
     private String internet_error;
+    private Context context;
 
     public ZhiHuDiary(Context context) {
+        this.context = context;
         json_error = context.getString(R.string.json_error);
         internet_error = context.getString(R.string.internet_error);
         mQueue = Volley.newRequestQueue(context);
@@ -55,6 +58,8 @@ public class ZhiHuDiary implements IZhiHuDiary {
                             ZhiHuDiaryEntity zhiHuDiaryEntity = HttpUtils.parseJsonWithGson(response, ZhiHuDiaryEntity.class);
                             if(null != zhiHuDiaryEntity.getStories() && zhiHuDiaryEntity.getStories().size()>0){
                                 callback.onSuccess(zhiHuDiaryEntity.getStories());
+                                ZhiHuDBHelper dbHelper = ZhiHuDBHelper.getInstance();
+                                dbHelper.saveZhiHuDiaryBefore(context, zhiHuDiaryEntity.getStories(), zhiHuDiaryEntity.getDate());
                             }else {
                                 callback.onNoData();
                             }
